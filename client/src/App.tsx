@@ -7,13 +7,21 @@ import { ThemeProvider } from "@/contexts/ThemeContext";
 import Home from "@/pages/Home";
 
 function AppRouter() {
-  const base = (import.meta.env.BASE_URL || "/").replace(/\/$/, "");
+  const normalize = (p: string) => {
+    const s = (p || "/").toString();
+    return "/" + s.replace(/^\/+/, "").replace(/\/+$/, "");
+  };
+
+  const base = normalize(import.meta.env.BASE_URL);
 
   const useBaseLocation = () => {
     const [location, navigate] = useLocation();
+    const normalizedLocation = normalize(location);
 
     const strippedLocation =
-      base && location.startsWith(base) ? location.slice(base.length) || "/" : location;
+      base && normalizedLocation.startsWith(base)
+        ? normalizedLocation.slice(base.length) || "/"
+        : normalizedLocation;
 
     const baseNavigate = (to: string, ...args: any[]) => navigate(base + to, ...args);
 
