@@ -1,7 +1,7 @@
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import NotFound from "@/pages/NotFound";
-import { Route, Switch, Router as WouterRouter, useLocation } from "wouter";
+import { Route, Switch, Router as WouterRouter } from "wouter";
 import ErrorBoundary from "@/components/ErrorBoundary";
 import { ThemeProvider } from "@/contexts/ThemeContext";
 import Home from "@/pages/Home";
@@ -14,22 +14,8 @@ function AppRouter() {
 
   const base = normalize(import.meta.env.BASE_URL);
 
-  const useBaseLocation = () => {
-    const [location, navigate] = useLocation();
-    const normalizedLocation = normalize(location);
-
-    const strippedLocation =
-      base && normalizedLocation.startsWith(base)
-        ? normalizedLocation.slice(base.length) || "/"
-        : normalizedLocation;
-
-    const baseNavigate = (to: string, ...args: any[]) => navigate(base + to, ...args);
-
-    return [strippedLocation, baseNavigate] as const;
-  };
-
   return (
-    <WouterRouter hook={useBaseLocation}>
+    <WouterRouter base={base}>
       <Switch>
         <Route path="/" component={Home} />
         <Route path="/404" component={NotFound} />
